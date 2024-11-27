@@ -1,0 +1,217 @@
+Week 2 RSA :
+STEP1: mkdir rsa // create RSA folder in kali Linux.
+
+STEP2: cd rsa // to go to rsa folder we created.
+
+STEP3: go to GitHub repo and download rsa from "ics needs" copypaste in rsa folder(kali) we created earlier.
+
+STEP4: ls // to show the content in the rsa folder.
+
+STEP5: cat pubkey.pem // to show the pubkey content.
+
+STEP6: * openssl rsa -pubin -inform PEM -text -noout < pubkey.pem. and copy Exopent value as e in notepad.
+
+STEP7: touch exploit.py // to create a exploit.py python file.
+
+STEP8: go and search HexaDecimal to decimal convertor , copy paste the content we got in STEP6. and copy the output from the website and paste it as "n".
+
+STEP9: now go to "factordb.com" and now paste the number which we saved previously as "n". Now copy the numbers as "p" starts with "398075...." and "q" starts with "4727721" in notepad.
+
+STEP10: Copy paste the pyhton code from github in the file we created in STEP7 .
+
+STEP11: now run the pyhton folder to run type "python exploit.py" // this will create a Private key in the file name "private.pem".
+
+STEP12: run this  openssl rsautl -decrypt -in enc.txt -out dec.txt -inkey private.pem
+// this will decrypt the "enc.txt" using "private.pem" key which we generated using python code and gives output in "dec.txt" file.
+
+STEP13: cat dec.txt // this will show the dectrypted text to us .
+
+
+=========================================================================================================================================================================================================================
+
+WEEK 3 : Examination of a website to test the vulnerability of attacks. – 
+       DVWA setup & SQLi 
+
+STEP1: cd/var/html
+
+STEP2: sudo git clone https://github.com/digininja/DVWA.git     // to clone the DVWA git repo.
+
+STEP3: sudo mv DVWA dvwa  // by deafault the rep will have DVWA folder so we make(rename) another folder with same content as "dvwa".
+
+STEP4: chmod -R 777 dvwa/   // this will give the read ,write and excute permissions to our dvwa folder recursilvely
+
+STEP5: cd dvwa/config // goes to dvwa->config folder.
+
+STEP6: cp config.inc.php.dist config.inc.php //copies the "config.inc.php.dist" to "config.inc.php"
+
+STEP7: cat config.inc.php   // to show the content in "config.inc.php".
+
+STEP8: nano config.inc.php    // to edit the "config.inc.php".
+
+STEP9: now search for username and password now u can change then and save(commands will be displayed on the screen to save and exit).
+
+STEP10: sudo service mysql start  // this will start the MySQL in the terminal(Kali).
+
+STEP11: sudo mysql -u root -p  //This logs you into MySQL as the root user. After running this command, it will prompt you for the MySQL root password{kali} .
+
+STEP12: create database database_name // this is used to create a database in Mysql. u can give anu name in the place of "database_name".
+
+STEP13: CREATE USER 'admin'@'127.0.0.1' IDENTIFIED BY 'password'; //This command creates a new MySQL user called admin that can connect only from 127.0.0.1 (localhost).
+        Replace 'password' with a secure password of your choice. This will be the password for the admin user.
+
+STEP14: GRANT ALL ON dvwa.* TO 'admin'@'127.0.0.1'; grants all the previlages to the user admin.
+
+STEP15: exit; // to stop the MySQL server
+
+STEP16: cd/etc // goes to etc folder of the kai Linux
+
+STEP17: cd php // goes to php folder.
+
+STEP18: cd 8.2 // goes to 8.2 file.
+
+STEP19: cd apache2 // goes to apache2 file.
+
+STEP20: sudo service apache2 start // starts the apache2 server.
+
+STEP21: goto browser and give http://localhost/DVWA or http://127.0.0.1/DVWA/login.php
+
+STEP22: give username as u given in "step9" and password in "step13". click on login.
+
+STEP23: Goto DVWA security -> Clcik on impossible set to "low"  // sets the DVWA security to low.
+
+STEP24: Select  SQLInjection
+
+STEP25: Enter 1 and Click  or Enter %’ or ‘1’=’1  // It displays all the information.
+
+=================================================================================================================================================================================================================================
+
+WEEK4 
+
+FOLLOW STEP19 FROM WEEK3 TILL STEP23
+
+STEP1: select "Command Injection".
+
+STEP2: enter these in the input field.
+       1. 127.0.0.1
+       2. 127.0.0.1;ls
+       3. 127.0.0.1;ls ../
+       4. 127.0.0.1;cat ../view_source.php 
+       5. 127.0.0.1&&net user
+       6. 127.0.0.1&net user
+
+—------------------------------------------------XSS Attack------------------------------------------------------------ 
+
+STEP1: go to XSS REFLECTED.
+
+STEP2: <script>alert("Hello Pikachu...!")</script>  //u can enter script tags in the input field.
+
+STEP3: now click on "submit" // u will see a alert in the browswer.
+
+—-------------------------------------------------CSRF ATTACK—---------------------------------------------------------
+
+STEP1: go to CSRF.
+
+STEP2: in the text Credentials give new password and confirm new password and click on change. it shows valid password.
+
+=====================================================================================================================================================================================================================================
+
+WEEK 5  Implement a firewall for an organization.
+
+Kali:
+
+   STEP1: open terminall in kali Linux.
+
+   STEP2: ifconfig // displays the ip address copy the ip address of the kali Linux beside inet.
+
+Windows:
+
+   STEP3: open cmd
+   
+   STEP4: ipconfig // displays the ip address, copy the ip address of windows.
+   
+   STEP5: ping (enter the ip address of kali Linux from STEP2)  //Connect windows and kali using command prompt in windows.
+
+Kali:
+   
+  STEP5: sudo iptables -A INPUT -s windows ip -j DROP //To block pinging of windows system use the following command.
+
+  
+Now check whether ping requests are allowed in windows 
+
+Windows:
+
+   STEP6: ping (enter the ip  address of kali Linux from step2)  // see it will not work
+
+To unblock the ping packets use the commands
+
+Kali: 
+   
+   STEP7: sudo iptables -D INPUT -s windows ip -j DROP // to ublock 
+
+------------------now we have done with IP address. Now lets see using ports(TCP)--------------------------------
+
+STEP1: sudo iptables -A (enter windows ip) -p tcp --destination-port 80 -j DROP
+    go to broswer in windows and enter ip address of kali linux it will show a page called apache
+
+STEP2: sudo iptables -D INPUT (enter windows ip) -p tecp --destination-port 80 -j DROP // to block 
+    go togo to broswer in windows and enter ip address of kali linux it will show "This site can't be reached.
+
+
+========================================================================================================================================================================================================================================
+
+WEEK 7:
+
+STEP1: Download the CMROS.zip->extract all-> save it in a folder
+
+STEP2: Now open kali linux.
+
+STEP3: Now open the VM and select the CMROS.OVF file->click on run
+
+STEP4: Consider the ip address of CMROS 
+
+STEP5: now in Kali lnux terminal type   ifconfig // displays the ip address copy iy, it will be beside the inet 
+
+STEP6: Download nmap tool and install
+
+STEP7: open nmap and type the  IP address of the CMROS and clcik on scan //It shows only http service only in the 
+       nmap tool. 
+
+STEP8: in Kali terminal  nmap -p -65535 -T4 -A -V 192.168.232.128(kali ip) // it will scan all the ports
+
+STEP9: now again open nmap and select intense scan,all tcp ports // Now it displays all ports like http and ssh.
+
+STEP10: Now open Kali Linux browser and search 192.168.232.128 // IT WILL SHOW A APACHE WEBPAGE
+
+STEP11: right click->inspect-> search for username and password
+
+STEP12: test@192.168.232.28 -p 13652 // in kali terminal... to test the ssh in port number 13652
+
+STEP13: ls -> whoami // in kali terminal it will show test becoz we are using test as username in STEP12
+
+STEP14: cd Desktop // goes to Desktop
+
+STEP15: download WinSCP and install it //It provides a graphical interface to transfer files between a local computer and a remote server using secure protocols.
+
+STEP16:IN WinScp set file protocol to SCP, enter kali linux ip in host name, enter port number 13652, enter username and password we got in STEP11.click on login
+
+STEP17: it will display the folders in GUI
+
+STEP18: Goto Desktop.
+
+STEP19: Open kali linux and search for wireshark tool.
+
+STEP20: Open cap.pcapng file in the wireshark from desktop folder.
+ 
+STEP21: Click any tcp filter and then right click →click follow → TCP Stream.
+
+STEP22: It displays user credentials ,Now copy password and open cmros using above credentials By
+
+STEP23: Now login in CMROS using details we got in STEP22. // to crack cmros system.
+
+STEP24: ls (in cmros terminal) // it displays the files.
+
+STEP25: cd Desktop // goes to desktop
+
+STEP26: ls // shows the files in Desktop folder .
+
+==============================================================================================================================================================================================
